@@ -6,14 +6,14 @@ public record ProductoDTO (
 		Integer id,
 		String nombre, 
 		BigDecimal precio,
-		String categoria){
-
-	public ProductoDTO(ProductoEntity prod) {
-		this(	prod.getId(),
-				prod.getNombre(),
-				prod.getPrecio(),
-				prod.getCategoria().getCategoria()
-		);
-	}
-
+		Integer cantidad,
+		CategoriaDTO categoria){
+		public ProductoDTO(ProductoEntity prod) {
+			this(
+					prod.getId(),
+					prod.getNombre(),
+					prod.getPrecio(),
+					prod.getCantidad(),
+					new CategoriaDTO(prod.getCategoria()));
+		}
 }

@@ -20,6 +20,11 @@ public class CategoriaEntity {
 		
 	}
 
+	public CategoriaEntity(CategoriaDTO categoria) {
+		this.id = categoria.id();
+		this.categoria = categoria.categoria();
+	}
+
 	/**
 	 * @return the id
 	 */

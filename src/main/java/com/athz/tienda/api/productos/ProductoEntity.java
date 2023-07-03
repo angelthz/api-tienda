@@ -2,6 +2,9 @@ package com.athz.tienda.api.productos;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +17,7 @@ import jakarta.persistence.Table;
 
 @Entity(name="Producto")
 @Table(name="productos")
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +29,18 @@ public class ProductoEntity {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id_categoria")
+	@JsonIgnore
 	private CategoriaEntity categoria;
 	
 	public ProductoEntity() {
 		
+	}
+
+	public ProductoEntity(AddProductoDTO datosProducto) {
+		this.nombre = datosProducto.nombre();
+		this.precio = datosProducto.precio();
+		this.cantidad = datosProducto.cantidad();
+		this.categoria = new CategoriaEntity(datosProducto.categoria());
 	}
 
 	/**
@@ -99,6 +111,13 @@ public class ProductoEntity {
 	 */
 	public void setCategoria(CategoriaEntity categoria) {
 		this.categoria = categoria;
+	}
+
+	public void update(UpdateProductoDTO datosProducto) {
+		this.nombre = datosProducto.nombre();
+		this.precio = datosProducto.precio();
+		this.cantidad = datosProducto.cantidad();
+		this.categoria = new CategoriaEntity(datosProducto.categoria());
 	}
 	
 	

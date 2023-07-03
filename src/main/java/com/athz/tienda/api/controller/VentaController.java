@@ -36,6 +36,7 @@ public class VentaController {
 	public void addVenta(@RequestBody VentaDatosDTO datos) {
 		ClienteEntity cliente = clienteRepo.getReferenceById(datos.id_cliente());
 		PagoEntity pago = pagoRepo.getReferenceById(datos.id_pago());
+		
 		ventaRepo.save(new VentaEntity(cliente, pago));
 	}
 }
