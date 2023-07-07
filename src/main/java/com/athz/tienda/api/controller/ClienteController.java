@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.athz.tienda.api.clientes.ClienteDTO;
-import com.athz.tienda.api.clientes.ClienteEntity;
-import com.athz.tienda.api.clientes.ClienteRespository;
-import com.athz.tienda.api.clientes.ClienteResultDTO;
-import com.athz.tienda.api.clientes.ClienteUpdateDTO;
-import com.athz.tienda.api.direcciones.DireccionAddDTO;
-import com.athz.tienda.api.ventas.PagoRepository;
-import com.athz.tienda.api.ventas.VentaEntity;
-import com.athz.tienda.api.ventas.VentaRepository;
+import com.athz.tienda.api.domain.clientes.ClienteDTO;
+import com.athz.tienda.api.domain.clientes.ClienteEntity;
+import com.athz.tienda.api.domain.clientes.ClienteRespository;
+import com.athz.tienda.api.domain.clientes.ClienteResultDTO;
+import com.athz.tienda.api.domain.clientes.ClienteUpdateDTO;
+import com.athz.tienda.api.domain.direcciones.DireccionAddDTO;
+import com.athz.tienda.api.domain.ventas.PagoRepository;
+import com.athz.tienda.api.domain.ventas.VentaEntity;
+import com.athz.tienda.api.domain.ventas.VentaRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -37,15 +37,10 @@ public class ClienteController {
 	@Autowired
 	private ClienteRespository clienteRepo;
 	
-	@Autowired
-	private VentaRepository ventasRepo;
-	
-	@Autowired
-	private PagoRepository pagosRepo;
 
 	
 	/**
-	 * Add New Cliente
+	 * Agrega un nuevo Cliente
 	 * @param datosRegistroCliente
 	 */
 	@PostMapping
@@ -54,7 +49,7 @@ public class ClienteController {
 	}
 	
 	/**
-	 * Get All Cli
+	 * Lista todos los clientes
 	 * @return
 	 */
 	@GetMapping
@@ -66,7 +61,7 @@ public class ClienteController {
 	}
 	
 	/**
-	 * Update Cliente
+	 * Actualiza un cliente
 	 * @param cliente
 	 */
 	@Transactional
@@ -78,7 +73,7 @@ public class ClienteController {
 	}
 	
 	/**
-	 * Delete Fisico
+	 * Delete Fisico de un cliente
 	 * @param id
 	 */
 	@Transactional
@@ -89,7 +84,7 @@ public class ClienteController {
 	}
 	
 	/**
-	 * Delete logico
+	 * Delete logico de un cliente
 	 */
 	@Transactional
 	@DeleteMapping("/desactivar/{id}")
@@ -99,7 +94,7 @@ public class ClienteController {
 	}
 	
 	/**
-	 * Add Direccion to Cliente
+	 * Agregar una Direccion a un Cliente
 	 * @param datos
 	 */
 	@Transactional
@@ -108,11 +103,6 @@ public class ClienteController {
 		ClienteEntity clienteEm = clienteRepo.getReferenceById(datos.idCliente());
 		clienteEm.addDirecciones(datos);
 	}
-	
-	@GetMapping("/ventas/{id}")
-	public List<VentaEntity> getVentasCliente(@RequestBody @PathVariable Integer id){
-		return this.ventasRepo.findById(id).stream().toList();
-	}
-	
+
 
 }
