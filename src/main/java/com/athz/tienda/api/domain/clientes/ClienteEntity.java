@@ -2,7 +2,11 @@ package com.athz.tienda.api.domain.clientes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.athz.tienda.api.domain.direcciones.DireccionAddDTO;
 import com.athz.tienda.api.domain.direcciones.DireccionDTO;
@@ -31,7 +35,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ClienteEntity {
+public class ClienteEntity implements UserDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column(name="id_cliente")
@@ -302,7 +310,10 @@ public class ClienteEntity {
 	}
 
 
-
+	/**
+	 * Actualiza aquellos permitidos de la entidad cliente.
+	 * @param cliente
+	 */
 	public void update(ClienteUpdateDTO cliente) {
 		if(cliente.nombre() != null)
 			this.nombre = cliente.nombre();
@@ -327,8 +338,11 @@ public class ClienteEntity {
 		
 	}
 
-
-
+	
+	/**
+	 * Añade una direccion o mas a la entidad cliente.
+	 * @param direccionesDTO
+	 */
 	public void addDirecciones(DireccionAddDTO direccionesDTO) {
 		direccionesDTO.direcciones().forEach( dir -> {
 			this.direcciones.add(new DireccionEntity(dir, this));
@@ -336,9 +350,76 @@ public class ClienteEntity {
 	}
 
 
-
+	/**
+	 * Cambie el estado de una cuenta de habilitado a deshabilitado
+	 * Delete Logico
+	 */
 	public void disable() {
 		this.estado = false;
+	}
+
+
+	/**
+	 * Permisos del usuario
+	 */
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	/**
+	 * Implmementacion de UserDetails, para validar el usuario y contraseña de la entidad cliente
+	 * debemos devolver el atributo que almacena la contraseña en la entidad
+	 */
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return this.pass;
+	}
+
+	
+	/**
+	 * Implmementacion de UserDetails, para validar el usuario y contraseña de la entidad cliente
+	 * devemos devolver el atributo que almacena el usuario/correo en la entidad
+	 */
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.correo;
+	}
+
+
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 	

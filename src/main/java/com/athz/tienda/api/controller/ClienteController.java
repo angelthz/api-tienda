@@ -53,7 +53,7 @@ public class ClienteController {
 	 * @return
 	 */
 	@GetMapping
-	public Page<ClienteResultDTO> getAllClientes(@PageableDefault(size = 3, sort = "id", direction =  Direction.DESC) Pageable paginationParams){
+	public Page<ClienteResultDTO> getAllClientes(@PageableDefault(size = 5, sort = "id", direction =  Direction.ASC) Pageable paginationParams){
 		//return clienteRepo.findAll().stream().map( cliente -> new ClienteResultDTO(cliente) ).toList();
 		//return clienteRepo.findByEstadoTrue().stream().map( cliente -> new ClienteResultDTO(cliente) ).toList();
 		return clienteRepo.findAll(paginationParams).map( cliente -> new ClienteResultDTO(cliente) );

@@ -1,4 +1,4 @@
-package com.athz.tienda.api.infra;
+package com.athz.tienda.api.infra.errores;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
