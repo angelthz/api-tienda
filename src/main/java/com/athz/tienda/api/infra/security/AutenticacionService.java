@@ -18,7 +18,7 @@ public class AutenticacionService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
 		//retornar un usuario por nombre de usurio
 		//en este caso por su correo
-		System.out.println("Autentication service");
+		System.out.println("Aut entication service");
 		return clienteRep.findByCorreo(correo);
 	}
 	

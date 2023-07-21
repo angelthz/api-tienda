@@ -1,5 +1,6 @@
 package com.athz.tienda.api.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 //Configuration: le dice a spring que esta clase es una clase de configuracion
 //por lo que spring le da prioridad a su instanciacion dado que es una configuracion
@@ -23,35 +25,40 @@ import org.springframework.security.web.SecurityFilterChain;
 //de autenticacion por defecto. Este metodo debe devolver un objeto de tipo HttpSecurityChain.
 @EnableWebSecurity
 public class SecurityConfigurations {
-	//Definicioon de nuestro Bean
+	
+	@Autowired
+	SecurityFilter securityFilter;
+	
+	/**
+	 * Sobrescribe la configuracion por defecto de SpringSecurity, estableciendo un tipo de sesion Stateless
+	 * @param httpSecurity
+	 * @return
+	 * @throws Exception
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//		return httpSecurity
-//				.csrf().disable()
-//				.sessionManagement()
-//				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//				.and().build();
 		
 		return httpSecurity
-				.csrf( csrf->csrf.disable())
-				.sessionManagement( session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.csrf( csrf->csrf.disable() )
+				.sessionManagement( session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
+				.authorizeHttpRequests(
+						authz -> authz
+						.requestMatchers("/login")
+						.permitAll()
+						.anyRequest()
+						.authenticated())
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //definicion del filtro para que se ejecute nuestro security filter
+								//agrega un filtro antes e implemente un usernamePaswordAhtenticationFilter
+								//valida que el usuario haya iniciado sesion en el sistema
+							
 				.build();
 	}
 	
 	/**
-	 * httpSecurity
-	 * .csrf().disable() //deshabilita la seguridad en contra de la suplantacion de identidad en
-	 * 					//en la configuracion Stateful, como nosotros vamos a implementar Stateles mediante
-	 * 					//JWT, no es necesario ya que la protecion Via JsonWebToken ya nos protege de estos 
-	 * 					//ataques
-	 * .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //cambia el metodo de autenticacion de StateFUL a StateLESS
-	.and().build(); //crea e instancia el objeto de la clase HttpSecurity
-	 */
-	
-	/**
-	 * Devolver un authtentication manager
-	 * @throws Exception 
-	 * 
+	 * Devuelve una instancia de AuthenticationManager
+	 * @param authConfiguration
+	 * @return
+	 * @throws Exception
 	 */
 	@Bean
 	public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {

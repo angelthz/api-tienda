@@ -35,6 +35,12 @@ public class AutenticacionController {
 	@Autowired
 	private TokenService tokenService; 
 	
+	
+	/**
+	 * Endpoint Login. Autentica el usuario y devulve in JWT Token
+	 * @param datosUsuario
+	 * @return
+	 */
 	@PostMapping
 	public ResponseEntity autenticarUsuario(@RequestBody DatosAutenticacionDTO datosUsuario) {
 		Authentication authToken = new UsernamePasswordAuthenticationToken(datosUsuario.correo(), datosUsuario.password());
